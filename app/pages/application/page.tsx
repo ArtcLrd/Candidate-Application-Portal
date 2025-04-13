@@ -12,13 +12,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, FileText, Upload } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
+
 export default function ApplyPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [useTextResume, setUseTextResume] = useState(false)
   const [textResumeContent, setTextResumeContent] = useState("")
-  const [parsedResume, setParsedResume] = useState<Record<string, any> | null>(null)
+  const [, setParsedResume] = useState<Record<string, string | string[] | undefined> | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: "",

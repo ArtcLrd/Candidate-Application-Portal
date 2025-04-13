@@ -3,6 +3,13 @@ import pinecone from "@/lib/pinecone"
 import { getEmbedding } from "@/lib/embeddings"
 import { extractSkills } from "@/lib/resume-utils"
 
+interface ResumeMetadata {
+  name?: string
+  email?: string
+  linkedin?: string
+  text?: string
+}
+
 export async function POST(req: Request) {
   try {
     const { query } = await req.json() // The job description or search query
@@ -25,7 +32,7 @@ export async function POST(req: Request) {
     // Format the results for the frontend
     const formattedResults =
       searchResults.matches?.map((match) => {
-        const metadata = match.metadata as any
+        const metadata = match.metadata as ResumeMetadata
 
         // Extract skills from text
         const skills = extractSkills(metadata.text || "")

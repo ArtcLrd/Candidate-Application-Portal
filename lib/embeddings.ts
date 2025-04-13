@@ -60,17 +60,22 @@ export async function getEmbedding(text: string, retries = 3): Promise<number[]>
     const embedding = response.data.data[0].embedding
     embeddingCache.set(truncatedText, embedding) // Store in cache
     return embedding
-  } catch (err: any) {
-    if (err.response?.status === 429 && retries > 0) {
-      const waitTime = Math.pow(2, 3 - retries) * 1000 // Exponential backoff (2s, 4s, 8s)
-      console.warn(`Rate limit hit. Retrying in ${waitTime / 1000}s...`)
-      await new Promise((res) => setTimeout(res, waitTime))
-      return getEmbedding(truncatedText, retries - 1)
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 429 && retries > 0) {
+        const waitTime = Math.pow(2, 3 - retries) * 1000
+        console.warn(`Rate limit hit. Retrying in ${waitTime / 1000}s...`)
+        await new Promise((res) => setTimeout(res, waitTime))
+        return getEmbedding(truncatedText, retries - 1)
+      }
+
+      console.error("Embedding API Error:", err.response?.data || err.message)
+    } else if (err instanceof Error) {
+      console.error("Unexpected Error:", err.message)
+    } else {
+      console.error("Unknown error in embedding:", err)
     }
 
-    console.error("Embedding API Error:", err?.response?.data || err.message)
-
-    // Use fallback embedding when API fails
     console.warn("Using fallback embedding due to API error")
     const fallbackEmbedding = createFallbackEmbedding(truncatedText)
     embeddingCache.set(truncatedText, fallbackEmbedding)

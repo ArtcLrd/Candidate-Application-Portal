@@ -9,7 +9,7 @@ export default function Home() {
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold tracking-tight">Candidate Application Portal</h1>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Submit your application and join our team. We're looking for talented individuals to help us build the future.
+            Submit your application and join our team. We&apos;re looking for talented individuals to help us build the future.
           </p>
         </div>
         
